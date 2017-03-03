@@ -11,10 +11,10 @@ namespace DropboxApi
 {
     public static class DropboxHelper
     {
-        public static void HandleFolderCreationAndSharing(string folderPath, string emailAddress)
+        public static void HandleFolderCreationAndSharing(string oauth2AccessToken, string message, string folderPath, string emailAddress)
         {
             // GET Dropbox oauth2AccessToken from the Dropbox app you create.
-            var dropboxClient = new Dropbox.Api.DropboxClient("");
+            var dropboxClient = new Dropbox.Api.DropboxClient(oauth2AccessToken);
 
             FolderMetadata folderData;
 
@@ -43,7 +43,7 @@ namespace DropboxApi
             MemberSelector.Email mailMember = new MemberSelector.Email(emailAddress);
             AddMember addMember = new AddMember(mailMember, AccessLevel.Editor.Instance);
 
-            AddFolderMemberArg args2 = new AddFolderMemberArg(shareId, new List<AddMember>() { addMember }, false, "This is a message sent from the app trial");
+            AddFolderMemberArg args2 = new AddFolderMemberArg(shareId, new List<AddMember>() { addMember }, false, message);
 
             dropboxClient.Sharing.AddFolderMemberAsync(args2).Wait();
         }
